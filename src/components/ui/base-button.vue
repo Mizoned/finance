@@ -42,5 +42,9 @@ export default {
     &--secondary {
       background-color: grey;
     }
+
+    &--warning {
+      background-color: orange;
+    }
   }
 </style>

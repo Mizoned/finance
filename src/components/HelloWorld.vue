@@ -18,7 +18,7 @@ const funcPrivet = (string) => {
 
   <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>
-    <base-button @privet="funcPrivet" :label="msg" color="green"/>
+    <base-button @privet="funcPrivet" :label="msg" color="warning"/>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR
