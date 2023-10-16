@@ -20,11 +20,6 @@ export default {
       default: 'primary'
     }
   },
-  data() {
-    return {
-      test: 'test'
-    }
-  },
   methods: {
     clickHandler(event) {
       this.$emit('privet', 'Hello World!!!');
