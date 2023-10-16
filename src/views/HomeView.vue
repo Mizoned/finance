@@ -1,27 +1,17 @@
 <template>
-  <div>Home view {{ counter }}</div>
+  <div>Home view counter: {{ counter }}</div>
   <div class="buttons">
-    <base-button
-        @click="increment"
-        label="increment"
-        color="default"
-    />
-    <base-button
-        @click="decrement"
-        label="decrement"
-        color="default"
-    />
+    <v-btn color="info" @click="increment">Increment</v-btn>
+    <v-btn color="error" @click="decrement">decrement</v-btn>
   </div>
 </template>
 
 <script>
-import {useCounterStore} from "@/store/CounterStore.js";
-import {mapActions, mapState} from "pinia";
-import BaseButton from "@/components/ui/base-button.vue";
+import { useCounterStore } from "@/store/CounterStore.js";
+import { mapActions, mapState } from "pinia";
 
 export default {
   name: "HomeView",
-  components: {BaseButton},
   computed: {
     ...mapState(useCounterStore, {
       counter: "count"
@@ -40,5 +30,6 @@ export default {
 .buttons {
   display: flex;
   gap: 20px;
+  margin-top: 10px;
 }
 </style>

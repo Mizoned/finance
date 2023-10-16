@@ -1,7 +1,7 @@
 <template>
   <div class="header">
-    <router-link to="/">Home</router-link>
-    <router-link to="/profile">Profile</router-link>
+    <v-btn variant="text" to="/" color="blue">Home</v-btn>
+    <v-btn variant="text" to="/profile" color="blue">Profile</v-btn>
   </div>
   <div class="content">
     <router-view/>
