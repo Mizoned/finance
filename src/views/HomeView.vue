@@ -2,21 +2,21 @@
   <div class="table-wrapper" v-if="!isLoading">
     <v-table>
       <thead>
-      <tr>
-        <th class="text-left">Название</th>
-        <th class="text-left">Цена</th>
-        <th class="text-right"></th>
-      </tr>
+        <tr>
+          <th class="text-left">Название</th>
+          <th class="text-left">Цена</th>
+          <th class="text-right"></th>
+        </tr>
       </thead>
       <tbody>
-      <tr
-          v-for="item in paginatedCurrencies"
-          :key="item.name"
-      >
-        <td class="text-left">{{ item.name }}</td>
-        <td class="text-left">{{ item.value }} ₽</td>
-        <td class="text-right"><v-btn color="info">Добавить</v-btn></td>
-      </tr>
+        <tr
+            v-for="item in paginatedCurrencies"
+            :key="item.name"
+        >
+          <td class="text-left">{{ item.name }}</td>
+          <td class="text-left">{{ item.value }} ₽</td>
+          <td class="text-right"><v-btn color="info">Добавить</v-btn></td>
+        </tr>
       </tbody>
     </v-table>
     <v-pagination v-model="page" :length="totalPages" @update:model-value="setPage" color="primary"></v-pagination>
