@@ -1,27 +1,49 @@
 <template>
-  <div>Home view counter: {{ counter }}</div>
   <div class="buttons">
-    <v-btn color="info" @click="increment">Increment</v-btn>
-    <v-btn color="error" @click="decrement">decrement</v-btn>
+    <v-btn color="info" @click="getCurrencies" :block="true">get currencies</v-btn>
+  </div>
+  <div>
+    <v-table v-if="!isLoading">
+      <thead>
+      <tr>
+        <th class="text-center">Name</th>
+        <th class="text-center">Value</th>
+        <th class="text-center">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr
+          v-for="(name, key) in currencies"
+          :key="key"
+      >
+        <td>{{ key }}</td>
+        <td>{{ name }}</td>
+        <td><v-btn color="info">Add</v-btn></td>
+      </tr>
+      </tbody>
+    </v-table>
   </div>
 </template>
 
 <script>
-import { useCounterStore } from "@/store/CounterStore.js";
+import { useCurrenciesStore } from "@/store/CurrenciesStore.js";
 import { mapActions, mapState } from "pinia";
 
 export default {
   name: "HomeView",
   computed: {
-    ...mapState(useCounterStore, {
-      counter: "count"
+    ...mapState(useCurrenciesStore, {
+      currencies: "currencies",
+      isLoading: 'isLoading'
     })
   },
   methods: {
-    ...mapActions(useCounterStore, {
-      increment: 'increment',
-      decrement: 'decrement'
+    ...mapActions(useCurrenciesStore, {
+      getCurrencies: 'getCurrencies'
     })
+  },
+  created() {
+    this.getCurrencies();
   }
 }
 </script>
