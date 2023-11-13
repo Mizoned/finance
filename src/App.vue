@@ -18,6 +18,13 @@
   align-items: center;
   width: 100%;
   gap: 20px;
-  height: 60px;
+  padding: 20px;
+  border-bottom: 1px solid lightgray;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  padding: 20px 0;
 }
 </style>

@@ -1,45 +1,52 @@
 <template>
-  <div class="buttons">
-    <v-btn color="info" @click="getCurrencies" :block="true">get currencies</v-btn>
-  </div>
-  <div>
-    <v-table v-if="!isLoading">
+  <div class="table-wrapper" v-if="!isLoading">
+    <v-table>
       <thead>
-      <tr>
-        <th class="text-center">Name</th>
-        <th class="text-center">Value</th>
-        <th class="text-center">Actions</th>
-      </tr>
+        <tr>
+          <th class="text-left">Название</th>
+          <th class="text-left">Цена</th>
+          <th class="text-right"></th>
+        </tr>
       </thead>
       <tbody>
-      <tr
-          v-for="(name, key) in currencies"
-          :key="key"
-      >
-        <td>{{ key }}</td>
-        <td>{{ name }}</td>
-        <td><v-btn color="info">Add</v-btn></td>
-      </tr>
+        <tr
+            v-for="item in paginatedCurrencies"
+            :key="item.name"
+        >
+          <td class="text-left">{{ item.name }}</td>
+          <td class="text-left">{{ item.value }} ₽</td>
+          <td class="text-right"><v-btn color="info">Добавить</v-btn></td>
+        </tr>
       </tbody>
     </v-table>
+    <v-pagination v-model="page" :length="totalPages" @update:model-value="setPage" color="primary"></v-pagination>
+  </div>
+  <div v-else class="spinner-wrapper">
+    <the-spinner  />
   </div>
 </template>
 
 <script>
 import { useCurrenciesStore } from "@/store/CurrenciesStore.js";
 import { mapActions, mapState } from "pinia";
+import TheSpinner from "@/components/the-spinner.vue";
 
 export default {
   name: "HomeView",
+  components: {TheSpinner},
   computed: {
     ...mapState(useCurrenciesStore, {
-      currencies: "currencies",
-      isLoading: 'isLoading'
+      currencies: 'currencies',
+      page: 'page',
+      totalPages: 'totalPages',
+      isLoading: 'isLoading',
+      paginatedCurrencies: 'paginatedCurrencies'
     })
   },
   methods: {
     ...mapActions(useCurrenciesStore, {
-      getCurrencies: 'getCurrencies'
+      getCurrencies: 'getCurrencies',
+      setPage: 'setPage'
     })
   },
   created() {
@@ -49,9 +56,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.buttons {
+.table-wrapper {
   display: flex;
+  flex-direction: column;
   gap: 20px;
-  margin-top: 10px;
+  width: 100%;
+}
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 </style>
