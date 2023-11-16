@@ -11,11 +11,12 @@
       <tbody>
         <tr
             v-for="item in paginatedCurrencies"
-            :key="item.name"
+            :key="item.id"
         >
           <td class="text-left">{{ item.name }}</td>
-          <td class="text-left">{{ item.value }} ₽</td>
-          <td class="text-right"><v-btn color="info">Добавить</v-btn></td>
+          <td class="text-left">{{ item.value.toFixed(2) }} ₽</td>
+          <td v-if="isAdded(item)" class="text-right"><v-btn color="info" @click="addSelectedCurrencies(item)">Добавить избранное</v-btn></td>
+          <td v-else class="text-right"><v-btn color="info" @click="removeSelectedCurrencies(item)">Удалить из избранного</v-btn></td>
         </tr>
       </tbody>
     </v-table>
@@ -33,10 +34,11 @@ import TheSpinner from "@/components/the-spinner.vue";
 
 export default {
   name: "HomeView",
-  components: {TheSpinner},
+  components: { TheSpinner },
   computed: {
     ...mapState(useCurrenciesStore, {
       currencies: 'currencies',
+      selectedCurrencies: 'selectedCurrencies',
       page: 'page',
       totalPages: 'totalPages',
       isLoading: 'isLoading',
@@ -46,8 +48,13 @@ export default {
   methods: {
     ...mapActions(useCurrenciesStore, {
       getCurrencies: 'getCurrencies',
-      setPage: 'setPage'
-    })
+      setPage: 'setPage',
+      addSelectedCurrencies: 'addSelectedCurrencies',
+      removeSelectedCurrencies: 'removeSelectedCurrencies'
+    }),
+    isAdded(currency) {
+      return !this.selectedCurrencies.find((sc) => sc.id === currency.id);
+    }
   },
   created() {
     this.getCurrencies();
