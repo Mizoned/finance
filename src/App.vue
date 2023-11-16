@@ -1,7 +1,7 @@
 <template>
   <div class="header">
-    <v-btn variant="text" to="/" color="blue">Home</v-btn>
-    <v-btn variant="text" to="/profile" color="blue">Profile</v-btn>
+    <v-btn variant="text" to="/" color="blue">Валюты</v-btn>
+    <v-btn variant="text" to="/profile" color="blue">Избранные валюты</v-btn>
   </div>
   <div class="content">
     <router-view/>
@@ -19,7 +19,7 @@
   width: 100%;
   gap: 20px;
   padding: 20px;
-  border-bottom: 1px solid lightgray;
+  border-bottom: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 
 .content {
