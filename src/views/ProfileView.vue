@@ -9,7 +9,15 @@
           prepend-avatar="src/assets/img/icon-budget.png"
       >
         <v-card-title>{{ totalBudget }} ₽</v-card-title>
-        <v-card-text>прибыль (%) с прошлых данных</v-card-text>
+        <v-card-text>
+          <v-chip
+              color="green"
+              text="Прибыль 3%"
+              class="text-uppercase"
+              label
+              size="small"
+          />
+        </v-card-text>
       </v-card>
       <div class="table-wrapper">
         <v-table>
