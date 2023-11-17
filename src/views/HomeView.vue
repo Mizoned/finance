@@ -1,59 +1,69 @@
 <template>
-  <div class="table-wrapper" v-if="!isLoading">
-    <v-table>
-      <thead>
-        <tr>
-          <th class="text-left">Название</th>
-          <th class="text-left">Цена</th>
-          <th class="text-right"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-            v-for="item in paginatedCurrencies"
-            :key="item.id"
-        >
-          <td class="text-left">{{ item.name }}</td>
-          <td class="text-left">{{ item.value.toFixed(2) }} ₽</td>
-          <td v-if="isAdded(item)" class="text-right"><v-btn color="info" @click="addSelectedCurrencies(item)">Добавить избранное</v-btn></td>
-          <td v-else class="text-right"><v-btn color="info" @click="removeSelectedCurrencies(item)">Удалить из избранного</v-btn></td>
-        </tr>
-      </tbody>
-    </v-table>
-    <v-pagination v-model="page" :length="totalPages" @update:model-value="setPage" color="primary"></v-pagination>
-  </div>
-  <div v-else class="spinner-wrapper">
-    <the-spinner  />
+  <div class="currencies-layout">
+    <template v-if="!isLoading">
+      <div class="table-wrapper">
+        <v-table>
+          <thead>
+          <tr>
+            <th class="text-left">Название</th>
+            <th class="text-left">Цена</th>
+            <th class="text-right"><v-timer :seconds="60" label="Обновить цены"/></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+              v-for="item in paginatedCurrencies"
+              :key="item.name"
+          >
+            <td class="text-left">{{ item.name }}</td>
+            <td class="text-left">{{ item.value.toFixed(2) }} ₽</td>
+            <td v-if="isAdded(item)" class="text-right"><v-btn color="info" @click="addCurrencyToFavorites(item)">Добавить избранное</v-btn></td>
+            <td v-else class="text-right"><v-btn color="info" @click="removeCurrencyFromFavorites(item)">Удалить из избранного</v-btn></td>
+          </tr>
+          </tbody>
+        </v-table>
+        <v-pagination v-if="totalPages > 1" v-model="page" :length="totalPages" @update:model-value="setPage" color="primary"/>
+      </div>
+    </template>
+    <div v-else class="spinner-wrapper">
+      <the-spinner  />
+    </div>
   </div>
 </template>
 
 <script>
 import { useCurrenciesStore } from "@/store/CurrenciesStore.js";
+import { useFeaturedCurrenciesStore } from "@/store/FeaturedCurrenciesStore.js";
 import { mapActions, mapState } from "pinia";
 import TheSpinner from "@/components/the-spinner.vue";
+import VTimer from "@/components/v-timer.vue";
 
 export default {
   name: "HomeView",
-  components: { TheSpinner },
+  components: {VTimer, TheSpinner },
   computed: {
     ...mapState(useCurrenciesStore, {
       currencies: 'currencies',
-      selectedCurrencies: 'selectedCurrencies',
       page: 'page',
       totalPages: 'totalPages',
       isLoading: 'isLoading',
       paginatedCurrencies: 'paginatedCurrencies'
+    }),
+    ...mapState(useFeaturedCurrenciesStore, {
+      selectedCurrencies: 'currencies',
     })
   },
   methods: {
     ...mapActions(useCurrenciesStore, {
       getCurrencies: 'getCurrencies',
       setPage: 'setPage',
-      addSelectedCurrencies: 'addSelectedCurrencies',
-      removeSelectedCurrencies: 'removeSelectedCurrencies'
+    }),
+    ...mapActions(useFeaturedCurrenciesStore, {
+      addCurrencyToFavorites: 'addCurrencyToFavorites',
+      removeCurrencyFromFavorites: 'removeCurrencyFromFavorites'
     }),
     isAdded(currency) {
-      return !this.selectedCurrencies.find((sc) => sc.id === currency.id);
+      return !this.selectedCurrencies.find((sc) => sc.name === currency.name);
     }
   },
   created() {
@@ -63,12 +73,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.table-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-}
 .spinner-wrapper {
   display: flex;
   justify-content: center;
