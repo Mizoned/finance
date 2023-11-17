@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="currencies-layout">
     <v-empty v-if="!currencies.length"/>
     <template v-else>
       <v-card
@@ -19,7 +19,7 @@
             <th class="text-left">Цена</th>
             <th class="text-left">Количество</th>
             <th class="text-left">Общая стоимость</th>
-            <th class="text-right"></th>
+            <th class="text-right"><v-timer :seconds="60" label="Обновить цены"/></th>
           </tr>
           </thead>
           <tbody>
@@ -55,10 +55,11 @@
 import { useFeaturedCurrenciesStore } from "@/store/FeaturedCurrenciesStore.js";
 import { mapActions, mapState } from "pinia";
 import VEmpty from "@/components/v-empty.vue";
+import VTimer from "@/components/v-timer.vue";
 
 export default {
   name: "HomeView",
-  components: { VEmpty },
+  components: {VTimer, VEmpty },
   computed: {
     ...mapState(useFeaturedCurrenciesStore, {
       currencies: 'currencies',
@@ -81,22 +82,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.profile {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-
-  &__budget {
-
-  }
-}
-
-.table-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-}
-</style>
+<style scoped lang="scss"></style>
