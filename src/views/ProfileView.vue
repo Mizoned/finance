@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <v-empty v-if="!selectedCurrencies.length"/>
+    <v-empty v-if="!currencies.length"/>
     <template v-else>
       <v-card
           class="profile__budget"
@@ -8,7 +8,7 @@
           title="Общий бюджет"
           prepend-avatar="src/assets/img/icon-budget.png"
       >
-        <v-card-title>{{ total }} ₽</v-card-title>
+        <v-card-title>{{ totalBudget }} ₽</v-card-title>
         <v-card-text>прибыль (%) с прошлых данных</v-card-text>
       </v-card>
       <div class="table-wrapper">
@@ -24,8 +24,8 @@
           </thead>
           <tbody>
           <tr
-              v-for="item in selectedCurrencies"
-              :key="item.id"
+              v-for="item in paginatedCurrencies"
+              :key="item.name"
           >
             <td class="text-left">{{ item.name }}</td>
             <td class="text-left">{{ item.value.toFixed(2) }} ₽</td>
@@ -36,44 +36,46 @@
                   type="number"
                   min="0"
                   variant="plain"
-                  suffix="₽"/>
+              />
             </th>
             <th class="text-left">{{ (item.value * item.count).toFixed(2) }} ₽</th>
             <td class="text-right">
-              <v-btn color="info" @click="removeSelectedCurrencies(item)">Удалить</v-btn>
+              <v-btn color="info" @click="removeCurrencyFromFavorites(item)">Удалить</v-btn>
             </td>
           </tr>
           </tbody>
         </v-table>
-        <!--    <v-pagination v-model="page" :length="totalPages" @update:model-value="setPage" color="primary"></v-pagination>-->
+        <v-pagination v-if="totalPages > 1" v-model="page" :length="totalPages" @update:model-value="setPage" color="primary"/>
       </div>
     </template>
   </div>
 </template>
 
 <script>
-import {useCurrenciesStore} from "@/store/CurrenciesStore.js";
-import {mapActions, mapState} from "pinia";
+import { useFeaturedCurrenciesStore } from "@/store/FeaturedCurrenciesStore.js";
+import { mapActions, mapState } from "pinia";
 import VEmpty from "@/components/v-empty.vue";
 
 export default {
   name: "HomeView",
-  components: {VEmpty},
+  components: { VEmpty },
   computed: {
-    ...mapState(useCurrenciesStore, {
-      selectedCurrencies: 'selectedCurrencies'
-    }),
-    total() {
-      return this.selectedCurrencies.reduce((accumulator, currency) => accumulator + (currency.value * currency.count), 0).toFixed(2);
-    }
+    ...mapState(useFeaturedCurrenciesStore, {
+      currencies: 'currencies',
+      page: 'page',
+      paginatedCurrencies: 'paginatedCurrencies',
+      totalPages: 'totalPages',
+      totalBudget: 'totalBudget'
+    })
   },
   methods: {
-    ...mapActions(useCurrenciesStore, {
-      removeSelectedCurrencies: 'removeSelectedCurrencies',
-      updateSelectedCurrencies: 'updateSelectedCurrencies'
+    ...mapActions(useFeaturedCurrenciesStore, {
+      removeCurrencyFromFavorites: 'removeCurrencyFromFavorites',
+      updateCurrencyFromFavorites: 'updateCurrencyFromFavorites',
+      setPage: 'setPage'
     }),
     updateCurrencyValueHandler(event, item) {
-      this.updateSelectedCurrencies(item);
+      this.updateCurrencyFromFavorites(item);
     }
   }
 }
