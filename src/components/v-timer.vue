@@ -1,5 +1,5 @@
 <template>
-    <v-btn class="v-timer__button" variant="outlined" @click="startHandler">
+    <v-btn class="v-timer__button" variant="outlined" :loading="isLoading" min-width="86" @click="startHandler">
       <template v-if="isRunning" #prepend>
         <v-progress-circular :model-value="progress" :size="24" :width="2"/>
       </template>
@@ -10,8 +10,16 @@
 <script>
 export default {
   name: "v-timer",
-  emits: ['start'],
+  emits: ['start-timer', 'end-timer', 'click'],
   props: {
+    isLoading: {
+      type: Boolean,
+      default: false
+    },
+    name: {
+      type: String,
+      required: true
+    },
     seconds: {
       type: Number,
       default: 60
@@ -25,37 +33,55 @@ export default {
     return {
       isRunning: false,
       timeLeft: this.seconds,
-      interval: null,
-      progress: 0
+      interval: null
+    }
+  },
+  created() {
+    let storageSeconds = JSON.parse(localStorage.getItem(`timer-${this.name}`)) ?? this.seconds;
+
+    if (storageSeconds < this.seconds) {
+      this.timeLeft = storageSeconds;
+    }
+  },
+  mounted() {
+    this.startTimer();
+  },
+  computed: {
+    progress: {
+      get() {
+        return Math.ceil(((this.seconds - this.timeLeft) / this.seconds) * 100);
+      },
+      set() {}
     }
   },
   methods: {
     startTimer() {
-      this.timeLeft = this.seconds;
-      this.progress = 0;
+      this.$emit('start-timer');
+      this.isRunning = true;
 
       this.interval = setInterval(() => {
-        this.timeLeft--;
-
-        this.progress =  Math.ceil(((this.seconds - this.timeLeft) / this.seconds) * 100);
+        --this.timeLeft;
 
         if (this.timeLeft <= 0) {
           clearInterval(this.interval);
           this.isRunning = false;
+          this.timeLeft = this.seconds;
+          this.$emit('end-timer');
         }
       }, 1000);
     },
     startHandler() {
       if (this.isRunning) return;
-      this.isRunning = true;
+      this.$emit('click');
       this.startTimer();
-      this.$emit('start');
+    }
+  },
+  watch: {
+    timeLeft(value) {
+      localStorage.setItem(`timer-${this.name}`, value);
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
-.v-timer {
-}
-</style>
+<style scoped lang="scss"></style>
