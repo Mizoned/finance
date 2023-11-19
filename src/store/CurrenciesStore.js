@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import CoinLayer from "@/api/CoinLayer.js";
+import CryptoRank from "@/api/CryptoRank.js";
 
 export const useCurrenciesStore = defineStore('currenciesStore', {
     state: () => {
@@ -22,17 +22,16 @@ export const useCurrenciesStore = defineStore('currenciesStore', {
     actions: {
         async getCurrencies() {
             let localCurrencies = JSON.parse(localStorage.getItem('currencies'));
-            let currencies = [];
 
             if (localCurrencies) {
-                currencies = localCurrencies;
+                this.currencies = localCurrencies;
             } else {
                 this.isLoading = true;
 
-                await CoinLayer.getCurrencies()
+                await CryptoRank.getCurrencies()
                     .then((response) => {
-                        currencies = this.prepareCurrencies(response?.data?.rates ?? {});
-                        localStorage.setItem('currencies', JSON.stringify(currencies));
+                        this.setCurrencies(response?.data?.data ?? []);
+                        this.totalPages = Math.ceil(this.currencies.length / this.limit);
                     })
                     .catch((error) => {
                         console.log(error);
@@ -41,24 +40,10 @@ export const useCurrenciesStore = defineStore('currenciesStore', {
                         this.isLoading = false;
                     });
             }
-
-            this.totalPages = Math.ceil(currencies.length / this.limit);
-            this.setCurrencies(currencies);
-        },
-        prepareCurrencies(currencies) {
-            let tmp = [];
-
-            Object.keys(currencies).forEach(key => {
-                tmp.push({
-                    name: key,
-                    value: currencies[key]
-                })
-            });
-
-            return tmp;
         },
         setCurrencies(array) {
             this.currencies = array;
+            localStorage.setItem('currencies', JSON.stringify(array));
         },
         setPage(page) {
             this.page = page;
