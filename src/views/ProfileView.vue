@@ -86,7 +86,7 @@
             </tr>
             </tbody>
           </v-table>
-          <v-pagination v-if="totalPages > 1" v-model="page" :length="totalPages" @update:model-value="setPage" color="primary"/>
+          <v-pagination v-if="totalPages > 1" v-model="page" size="32" :length="totalPages" total-visible="4" @update:model-value="setPage" color="primary"/>
         </div>
       </template>
     </template>

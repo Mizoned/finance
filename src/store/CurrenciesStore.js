@@ -7,8 +7,7 @@ export const useCurrenciesStore = defineStore('currenciesStore', {
             currencies: [],
             page: 1,
             limit: 10,
-            totalPages: 0,
-            isLoading: false,
+            isLoading: false
         }
     },
     getters: {
@@ -17,6 +16,9 @@ export const useCurrenciesStore = defineStore('currenciesStore', {
         },
         paginatedCurrencies() {
             return this.currencies?.slice(this.offset - this.limit, this.offset)
+        },
+        totalPages() {
+            return Math.ceil(this.currencies.length / this.limit);
         }
     },
     actions: {
@@ -31,7 +33,6 @@ export const useCurrenciesStore = defineStore('currenciesStore', {
                 await CryptoRank.getCurrencies()
                     .then((response) => {
                         this.setCurrencies(response?.data?.data ?? []);
-                        this.totalPages = Math.ceil(this.currencies.length / this.limit);
                     })
                     .catch((error) => {
                         console.log(error);
