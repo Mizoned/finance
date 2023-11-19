@@ -10,7 +10,7 @@
             class="profile__budget"
             max-width="320"
             title="Общий бюджет"
-            prepend-avatar="src/assets/img/icon-budget.png"
+            prepend-avatar="images/icon-budget.png"
         >
           <v-card-title class="d-flex align-center">
             $ {{ totalBudget }}
