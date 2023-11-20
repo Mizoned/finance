@@ -13,7 +13,7 @@ export const useCurrenciesStore = defineStore('currenciesStore', {
             isLoading: false,
             timerName: timerName,
             timerSeconds: timerSeconds,
-            storageTimerSeconds: Number.parseInt(localStorage.getItem(timerName)) ?? timerSeconds
+            timerSecondsLeft: Number.parseInt(localStorage.getItem(timerName)) ?? timerSeconds
         }
     },
     getters: {
@@ -31,7 +31,7 @@ export const useCurrenciesStore = defineStore('currenciesStore', {
         async getCurrencies() {
             let localCurrencies = JSON.parse(localStorage.getItem('currencies'));
 
-            if (localCurrencies && this.timerSeconds > this.storageTimerSeconds) {
+            if (localCurrencies && this.timerSeconds > this.timerSecondsLeft) {
                 this.currencies = localCurrencies;
             } else {
                 this.isLoading = true;
@@ -54,6 +54,9 @@ export const useCurrenciesStore = defineStore('currenciesStore', {
         },
         setPage(page) {
             this.page = page;
+        },
+        setTimerSecondsLeft(seconds) {
+            this.timerSecondsLeft = seconds;
         }
     }
 });

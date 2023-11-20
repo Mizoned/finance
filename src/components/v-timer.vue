@@ -10,7 +10,7 @@
 <script>
 export default {
   name: "v-timer",
-  emits: ['start-timer', 'end-timer', 'click'],
+  emits: ['start-timer', 'end-timer', 'click', 'time-left'],
   props: {
     isLoading: {
       type: Boolean,
@@ -61,14 +61,16 @@ export default {
 
       this.interval = setInterval(() => {
         --this.timeLeft;
+        this.$emit('time-left', this.timeLeft);
 
         if (this.timeLeft <= 0) {
           clearInterval(this.interval);
           this.isRunning = false;
           this.timeLeft = this.seconds;
+          this.$emit('time-left', this.timeLeft);
           this.$emit('end-timer');
         }
-      }, 1000);
+      }, 100);
     },
     startHandler() {
       if (this.isRunning) return;
