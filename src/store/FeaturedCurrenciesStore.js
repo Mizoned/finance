@@ -1,12 +1,18 @@
 import { defineStore } from 'pinia';
 import CryptoRank from "@/api/CryptoRank.js";
 
+const timerName = 'timerFeaturedCurrencies';
+const timerSeconds = 60;
+
 export const useFeaturedCurrenciesStore = defineStore('featuredCurrenciesStore', {
     state: () => {
         return {
             currencies: JSON.parse(localStorage.getItem('featuredCurrencies')) ?? [],
             oldCurrencies: JSON.parse(localStorage.getItem('oldFeaturedCurrencies')) ?? [],
             lastUpdateTime: JSON.parse(localStorage.getItem('lastUpdatedTimeFeaturedCurrencies')) ?? null,
+            timerName: timerName,
+            timerSeconds: timerSeconds,
+            storageTimerSeconds: Number.parseInt(localStorage.getItem(timerName)) ?? timerSeconds,
             page: 1,
             limit: 10,
             isLoading: false
@@ -40,27 +46,29 @@ export const useFeaturedCurrenciesStore = defineStore('featuredCurrenciesStore',
     },
     actions: {
         async getCurrenciesByIds() {
-            this.isLoading = true;
-            let arrayOfIds = this.currencies.map((currency) => currency.id);
+            if (this.currencies.length && this.timerSeconds === this.storageTimerSeconds) {
+                this.isLoading = true;
+                let arrayOfIds = this.currencies.map((currency) => currency.id);
 
-            await CryptoRank.getCurrenciesByIds(arrayOfIds)
-                .then((response) => {
-                    if (response.data.status.time === this.lastUpdateTime) return;
+                await CryptoRank.getCurrenciesByIds(arrayOfIds)
+                    .then((response) => {
+                        if (response.data.status.time === this.lastUpdateTime) return;
 
-                    this.setLastUpdateTime(response.data.status.time);
+                        this.setLastUpdateTime(response.data.status.time);
 
-                    this.setOldCurrencies(this.currencies);
+                        this.setOldCurrencies(this.currencies);
 
-                    let currencyData = response?.data?.data ?? [];
-                    currencyData = this.mergeCountOfCurrencies(currencyData);
-                    this.setCurrencies(currencyData);
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-                .finally(() => {
-                    this.isLoading = false;
-                });
+                        let currencyData = response?.data?.data ?? [];
+                        currencyData = this.mergeCountOfCurrencies(currencyData);
+                        this.setCurrencies(currencyData);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        this.isLoading = false;
+                    });
+            }
         },
         addCurrencyToFavorites(currency) {
             let isAdded = this.currencies.find((sc) => sc.id === currency.id);

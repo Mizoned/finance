@@ -1,13 +1,19 @@
 import { defineStore } from 'pinia';
 import CryptoRank from "@/api/CryptoRank.js";
 
+const timerName = 'timerCurrencies';
+const timerSeconds = 60;
+
 export const useCurrenciesStore = defineStore('currenciesStore', {
     state: () => {
         return {
             currencies: [],
             page: 1,
             limit: 10,
-            isLoading: false
+            isLoading: false,
+            timerName: timerName,
+            timerSeconds: timerSeconds,
+            storageTimerSeconds: Number.parseInt(localStorage.getItem(timerName)) ?? timerSeconds
         }
     },
     getters: {
@@ -25,7 +31,7 @@ export const useCurrenciesStore = defineStore('currenciesStore', {
         async getCurrencies() {
             let localCurrencies = JSON.parse(localStorage.getItem('currencies'));
 
-            if (localCurrencies) {
+            if (localCurrencies && this.timerSeconds > this.storageTimerSeconds) {
                 this.currencies = localCurrencies;
             } else {
                 this.isLoading = true;

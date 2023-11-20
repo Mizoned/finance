@@ -37,7 +37,7 @@ export default {
     }
   },
   created() {
-    let storageSeconds = JSON.parse(localStorage.getItem(`timer-${this.name}`)) ?? this.seconds;
+    let storageSeconds = JSON.parse(localStorage.getItem(this.name)) ?? this.seconds;
 
     if (storageSeconds < this.seconds) {
       this.timeLeft = storageSeconds;
@@ -78,7 +78,7 @@ export default {
   },
   watch: {
     timeLeft(value) {
-      localStorage.setItem(`timer-${this.name}`, value);
+      localStorage.setItem(this.name, value);
     }
   }
 }

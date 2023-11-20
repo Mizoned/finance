@@ -41,7 +41,7 @@
               <th class="text-left text-no-wrap">Количество</th>
               <th class="text-left text-no-wrap">Общая стоимость</th>
               <th class="text-right">
-                <v-timer ref="timer" @click="startTimerHandler" name="featured-currencies" :is-loading="isLoading" :seconds="seconds" label="Обновить данные"/>
+                <v-timer @click="startTimerHandler" :name="timerName" :is-loading="isLoading" :seconds="timerSeconds" label="Обновить данные"/>
               </th>
             </tr>
             </thead>
@@ -120,7 +120,9 @@ export default {
       totalPages: 'totalPages',
       totalBudget: 'totalBudget',
       totalOldBudget: 'totalOldBudget',
-      totalPercent: 'totalPercent'
+      totalPercent: 'totalPercent',
+      timerName: 'timerName',
+      timerSeconds: 'timerSeconds'
     })
   },
   methods: {
