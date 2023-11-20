@@ -70,7 +70,7 @@ export default {
           this.$emit('time-left', this.timeLeft);
           this.$emit('end-timer');
         }
-      }, 100);
+      }, 1000);
     },
     startHandler() {
       if (this.isRunning) return;
