@@ -41,7 +41,7 @@
               <th class="text-left text-no-wrap">Количество</th>
               <th class="text-left text-no-wrap">Общая стоимость</th>
               <th class="text-right">
-                <v-timer @click="startTimerHandler" :name="timerName" :is-loading="isLoading" :seconds="timerSeconds" label="Обновить данные"/>
+                <v-timer @click="startTimerHandler" @time-left="setTimerSecondsLeft" :name="timerName" :is-loading="isLoading" :seconds="timerSeconds" label="Обновить данные"/>
               </th>
             </tr>
             </thead>
@@ -122,7 +122,8 @@ export default {
       totalOldBudget: 'totalOldBudget',
       totalPercent: 'totalPercent',
       timerName: 'timerName',
-      timerSeconds: 'timerSeconds'
+      timerSeconds: 'timerSeconds',
+      timerSecondsLeft: 'timerSecondsLeft'
     })
   },
   methods: {
@@ -130,7 +131,8 @@ export default {
       removeCurrencyFromFavorites: 'removeCurrencyFromFavorites',
       updateCurrencyFromFavorites: 'updateCurrencyFromFavorites',
       getCurrenciesByIds: 'getCurrenciesByIds',
-      setPage: 'setPage'
+      setPage: 'setPage',
+      setTimerSecondsLeft: 'setTimerSecondsLeft'
     }),
     updateCurrencyValueHandler(event, item) {
       this.updateCurrencyFromFavorites(item);

@@ -12,7 +12,7 @@ export const useFeaturedCurrenciesStore = defineStore('featuredCurrenciesStore',
             lastUpdateTime: JSON.parse(localStorage.getItem('lastUpdatedTimeFeaturedCurrencies')) ?? null,
             timerName: timerName,
             timerSeconds: timerSeconds,
-            storageTimerSeconds: Number.parseInt(localStorage.getItem(timerName)) ?? timerSeconds,
+            timerSecondsLeft: Number.parseInt(localStorage.getItem(timerName)) ?? timerSeconds,
             page: 1,
             limit: 10,
             isLoading: false
@@ -46,7 +46,7 @@ export const useFeaturedCurrenciesStore = defineStore('featuredCurrenciesStore',
     },
     actions: {
         async getCurrenciesByIds() {
-            if (this.currencies.length && this.timerSeconds === this.storageTimerSeconds) {
+            if (this.currencies.length && this.timerSeconds === this.timerSecondsLeft) {
                 this.isLoading = true;
                 let arrayOfIds = this.currencies.map((currency) => currency.id);
 
@@ -135,6 +135,9 @@ export const useFeaturedCurrenciesStore = defineStore('featuredCurrenciesStore',
         setLastUpdateTime(string) {
             this.lastUpdateTime = string;
             localStorage.setItem('lastUpdatedTimeFeaturedCurrencies', JSON.stringify(string));
+        },
+        setTimerSecondsLeft(seconds) {
+            this.timerSecondsLeft = seconds;
         }
     }
 });

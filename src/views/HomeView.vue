@@ -14,7 +14,7 @@
               <th class="text-left text-no-wrap">Цена</th>
               <th class="text-left text-no-wrap">Изменения (24ч)</th>
               <th class="text-right">
-                <v-timer @click="startTimerHandler" :name="timerName" :seconds="timerSeconds" label="Обновить данные" />
+                <v-timer @click="startTimerHandler" @time-left="setTimerSecondsLeft" :name="timerName" :seconds="timerSeconds" label="Обновить данные" />
               </th>
             </tr>
             </thead>
@@ -77,7 +77,8 @@ export default {
       isLoading: 'isLoading',
       timerName: 'timerName',
       timerSeconds: 'timerSeconds',
-      paginatedCurrencies: 'paginatedCurrencies'
+      paginatedCurrencies: 'paginatedCurrencies',
+      timerSecondsLeft: 'timerSecondsLeft'
     }),
     ...mapState(useFeaturedCurrenciesStore, {
       selectedCurrencies: 'currencies',
@@ -87,6 +88,7 @@ export default {
     ...mapActions(useCurrenciesStore, {
       getCurrencies: 'getCurrencies',
       setPage: 'setPage',
+      setTimerSecondsLeft: 'setTimerSecondsLeft'
     }),
     ...mapActions(useFeaturedCurrenciesStore, {
       addCurrencyToFavorites: 'addCurrencyToFavorites',
