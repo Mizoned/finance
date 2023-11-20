@@ -14,7 +14,7 @@
               <th class="text-left text-no-wrap">Цена</th>
               <th class="text-left text-no-wrap">Изменения (24ч)</th>
               <th class="text-right">
-                <v-timer @click="startTimerHandler" name="currencies" :seconds="seconds" label="Обновить данные" />
+                <v-timer @click="startTimerHandler" :name="timerName" :seconds="timerSeconds" label="Обновить данные" />
               </th>
             </tr>
             </thead>
@@ -66,11 +66,6 @@ import VEmpty from "@/components/v-empty.vue";
 export default {
   name: "HomeView",
   components: { VEmpty, VTimer, TheSpinner },
-  data() {
-    return {
-      seconds: 60
-    }
-  },
   created() {
     this.getCurrencies();
   },
@@ -80,6 +75,8 @@ export default {
       page: 'page',
       totalPages: 'totalPages',
       isLoading: 'isLoading',
+      timerName: 'timerName',
+      timerSeconds: 'timerSeconds',
       paginatedCurrencies: 'paginatedCurrencies'
     }),
     ...mapState(useFeaturedCurrenciesStore, {
